@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,7 +36,13 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mess_Register'),
+        title: Center(child: Text('Mess_Register')),
+        backgroundColor: Color.fromARGB(255, 0, 26, 79),
+        titleTextStyle: TextStyle(
+          color: Color.fromARGB(255, 255, 255, 255),
+          fontSize: 25.0,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -77,13 +84,15 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: _addEntry,
-              child: Text('Add Entry'),
+              child: Text('Add Entry'), style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 72, 9, 85),),
+              )
             ),
             SizedBox(height: 32.0), // Added additional spacing
             Image.asset(
               'assets/iiit_dharwad_logo.png', // Path to the image asset
-              height: 80.0,
-              width: 80.0,
+              height: 115.0,
+              width: 115.0,
             ),
           ],
         ),
