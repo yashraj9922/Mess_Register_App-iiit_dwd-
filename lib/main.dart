@@ -44,6 +44,15 @@ class _MyHomePageState extends State<MyHomePage> {
           fontWeight: FontWeight.bold,
           fontStyle: FontStyle.italic),
       ),
+      bottomNavigationBar: Container(
+          color: Color.fromARGB(255, 0, 26, 79),
+          child: const Text('Yashraj_Kadam, 22BDS066',
+              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255),
+                  fontWeight: FontWeight.normal,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 9),
+              textAlign: TextAlign.center),
+        ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
