@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text('Mess_Register')),
-        backgroundColor: Color.fromARGB(255, 0, 26, 79),
+        backgroundColor: Color.fromARGB(255, 0, 21, 64),
         titleTextStyle: TextStyle(
           color: Color.fromARGB(255, 255, 255, 255),
           fontSize: 25.0,
@@ -240,6 +240,9 @@ class _QRViewExampleState extends State<QRViewExample> {
       if (scannedDataParts.length > 3) {
         final rollNumber = scannedDataParts[3];
         widget.onScannedQRCode(rollNumber);
+        setState(() {
+          controller.pauseCamera();
+        });
       }
     });
   }
