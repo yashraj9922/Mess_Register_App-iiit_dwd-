@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gsheets/gsheets.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,9 +27,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _rollNumberController = TextEditingController();
   final _quantityController = TextEditingController();
   String _selectedEntryType = 'Milk';
+  String _scannedRollNumber = '';
 
   @override
   Widget build(BuildContext context) {
@@ -39,26 +41,40 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Color.fromARGB(255, 255, 255, 255),
           fontSize: 25.0,
           fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.italic),
+          fontStyle: FontStyle.italic,
+        ),
       ),
       bottomNavigationBar: Container(
-          color: Color.fromARGB(255, 0, 26, 79),
-          child: const Text('Yashraj_Kadam, 22BDS066',
-              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255),
-                  fontWeight: FontWeight.normal,
-                  fontStyle: FontStyle.italic,
-                  fontSize: 9),
-              textAlign: TextAlign.center),
+        color: Color.fromARGB(255, 0, 26, 79),
+        child: const Text(
+          'Yashraj_Kadam, 22BDS066',
+          style: TextStyle(
+            color: Color.fromARGB(255, 255, 255, 255),
+            fontWeight: FontWeight.normal,
+            fontStyle: FontStyle.italic,
+            fontSize: 9,
+          ),
+          textAlign: TextAlign.center,
         ),
+      ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: _rollNumberController,
-              decoration: InputDecoration(
-                labelText: 'Roll Number',
+            ElevatedButton(
+              onPressed: _scanQRCode,
+              child: Text('Scan QR Code'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              'Roll Number: $_scannedRollNumber',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 16.0),
@@ -90,13 +106,14 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: _addEntry,
-              child: Text('Add Entry'), style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 72, 9, 85),),
-              )
+              child: Text('Add Entry'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
             ),
-            SizedBox(height: 32.0), // Added additional spacing
+            SizedBox(height: 32.0),
             Image.asset(
-              'assets/iiit_dharwad_logo.png', // Path to the image asset
+              'assets/iiit_dharwad_logo.png',
               height: 115.0,
               width: 115.0,
             ),
@@ -106,10 +123,25 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _scanQRCode() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => QRViewExample(
+          onScannedQRCode: (code) {
+            setState(() {
+              _scannedRollNumber = code;
+            });
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
+
   void _addEntry() async {
-    if (_rollNumberController.text.isNotEmpty &&
-        _quantityController.text.isNotEmpty) {
-      final rollNumber = _rollNumberController.text;
+    if (_scannedRollNumber.isNotEmpty && _quantityController.text.isNotEmpty) {
+      final rollNumber = _scannedRollNumber;
       final quantity = int.parse(_quantityController.text);
       final type = _selectedEntryType;
       final now = DateTime.now();
@@ -133,13 +165,13 @@ class _MyHomePageState extends State<MyHomePage> {
 '''); // Replace with your own credentials file
         final spreadsheet = await gsheets.spreadsheet(
             '1w-VzJr0VEuVndCdt1uq2AlPe_txnB1EYCWsjrSECODM'); // Replace with your own spreadsheet ID
-        // final sheet = await spreadsheet.sheetAt(0);
         final sheet = await spreadsheet.worksheetByTitle('Sheet1');
 
-        await sheet?.values.appendRow([rollNumber, type, quantity.toString(), now.toString()]);
+        await sheet?.values
+            .appendRow([rollNumber, type, quantity.toString(), now.toString()]);
 
-        _rollNumberController.clear();
         _quantityController.clear();
+        _scannedRollNumber = ''; // Clear scanned roll number
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Entry added successfully.'),
@@ -155,9 +187,60 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please enter roll number and quantity.'),
+          content: Text('Please scan a QR code and enter the quantity.'),
         ),
       );
     }
+  }
+}
+
+class QRViewExample extends StatefulWidget {
+  final Function(String) onScannedQRCode;
+
+  const QRViewExample({Key? key, required this.onScannedQRCode})
+      : super(key: key);
+
+  @override
+  _QRViewExampleState createState() => _QRViewExampleState();
+}
+
+class _QRViewExampleState extends State<QRViewExample> {
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  QRViewController? controller;
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Scan QR Code'),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: QRView(
+              key: qrKey,
+              onQRViewCreated: _onQRViewCreated,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedDataStream.listen((scanData) {
+      final scannedDataParts = scanData.code!.split(',');
+      if (scannedDataParts.length > 3) {
+        final rollNumber = scannedDataParts[3];
+        widget.onScannedQRCode(rollNumber);
+      }
+    });
   }
 }
