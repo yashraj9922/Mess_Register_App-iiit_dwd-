@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _quantityController = TextEditingController();
-  String _selectedEntryType = '';
+  String _selectedEntryType = 'Milk';
   String _scannedRollNumber = '';
   final gsheets = GSheets(r'''
 {
@@ -112,14 +112,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
       _quantityController.clear();
       _scannedRollNumber = '';
-
-// Reset the counter value and quantity controller
-      setState(() {
-        _counter = 0;
-        _quantityController.text = _counter.toString();
-        _selectedEntryType = ''; // Set the default toggle button
-      });
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Entry added successfully.'),
@@ -138,13 +130,12 @@ class _MyHomePageState extends State<MyHomePage> {
     final code = await Navigator.push<String>(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) =>
-            QRViewExample(onScannedQRCode: (code) {
-          setState(() {
-            _scannedRollNumber = code;
-          });
-          Navigator.pop(context);
-        }),
+        builder: (BuildContext context) => QRViewExample(onScannedQRCode: (code) {
+            setState(() {
+              _scannedRollNumber = code;
+            });
+            Navigator.pop(context);
+          },),
       ),
     );
 
@@ -155,7 +146,29 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  int _counter = 0;
+  Future<void> _createNewWorksheet() async {
+    final worksheetName =
+        'Sheet_${now.day}/${now.month}/${now.year}_(${now.hour}:${now.minute})';
+
+    try {
+      final spreadsheet = await gsheets.spreadsheet(spreadsheetId);
+      await spreadsheet.addWorksheet(worksheetName);
+
+      setState(() {});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('New worksheet created: $worksheetName'),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error creating worksheet: $e'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -183,6 +196,11 @@ class _MyHomePageState extends State<MyHomePage> {
           textAlign: TextAlign.center,
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _createNewWorksheet,
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.add),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -191,8 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
               onPressed: _scanQRCode,
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.lightBlue),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue),
               ),
               child: const Text('Scan QR Code'),
             ),
@@ -204,121 +221,45 @@ class _MyHomePageState extends State<MyHomePage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 46.0),
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: ToggleButtons(
-                        isSelected: [_selectedEntryType == 'Milk(0.5 L)'],
-                        onPressed: (index) {
-                          setState(() {
-                            _selectedEntryType = 'Milk(0.5 L)';
-                          });
-                        },
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: Colors.green,
-                        selectedColor: Colors.white,
-                        fillColor: Colors.green,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text('Milk(0.5 L)'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: ToggleButtons(
-                        isSelected: [_selectedEntryType == 'Milk(1 L)'],
-                        onPressed: (index) {
-                          setState(() {
-                            _selectedEntryType = 'Milk(1 L)';
-                          });
-                        },
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: Colors.green,
-                        selectedColor: const Color.fromARGB(255, 255, 255, 255),
-                        fillColor: Colors.green,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text('Milk(1 L)'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: ToggleButtons(
-                        isSelected: [_selectedEntryType == 'Curd(0.5 L)'],
-                        onPressed: (index) {
-                          setState(() {
-                            _selectedEntryType = 'Curd(0.5 L)';
-                          });
-                        },
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: Colors.green,
-                        selectedColor: Colors.white,
-                        fillColor: Colors.green,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text('Curd(0.5 L)'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            const SizedBox(height: 16.0),
+            DropdownButtonFormField<String>(
+              value: _selectedEntryType,
+              onChanged: (value) {
+                setState(() {
+                  _selectedEntryType = value!;
+                });
+              },
+              items: ['Milk', 'Curd']
+                  .map((type) => DropdownMenuItem(
+                        value: type,
+                        child: Text(type),
+                      ))
+                  .toList(),
+              decoration: const InputDecoration(
+                labelText: 'Entry Type',
+              ),
             ),
-            const SizedBox(height: 35.0), // Add space here
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                FloatingActionButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_counter > 0) {
-                        _counter--;
-                        _quantityController.text = _counter
-                            .toString(); // Update quantity controller value
-                      }
-                    });
-                  },
-                  child: Icon(Icons.remove, color: Colors.black),
-                  backgroundColor: Colors.white,
-                ),
-                Text('$_counter', style: const TextStyle(fontSize: 60.0)),
-                FloatingActionButton(
-                  onPressed: () {
-                    setState(() {
-                      _counter++;
-                      _quantityController.text = _counter
-                          .toString(); // Update quantity controller value
-                    });
-                  },
-                  child: Icon(Icons.add, color: Colors.black),
-                  backgroundColor: Colors.white,
-                ),
-              ],
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: _quantityController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Quantity',
+              ),
             ),
-            const SizedBox(height: 30.0), // Add space here
+            const SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: _addEntry,
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.lightBlue),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue),
               ),
               child: const Text('Add Entry'),
             ),
-            const SizedBox(height: 50.0),
+            const SizedBox(height: 32.0),
             Image.asset(
               'assets/iiit_dharwad_logo.png',
-              height: 150.0,
-              width: 150.0,
+              height: 115.0,
+              width: 115.0,
             ),
           ],
         ),
