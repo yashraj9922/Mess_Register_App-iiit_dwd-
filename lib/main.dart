@@ -99,14 +99,14 @@ class _MyHomePageState extends State<MyHomePage> {
         final existingQuantity = int.parse(rows[rowIndex][2]);
         final newQuantity = existingQuantity + quantity;
         rows[rowIndex][2] = newQuantity.toString();
-        rows[rowIndex][3] = now.toString();
+        // rows[rowIndex][3] = now.toString();
         await userSheet.values.insertRow(rowIndex + 1, rows[rowIndex]);
       } else {
         await userSheet.values.appendRow([
           rollNumber,
           type,
           quantity.toString(),
-          now.toString(),
+          // now.toString(),
         ]);
       }
 
