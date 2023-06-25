@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final spreadsheet = await gsheets.spreadsheet(spreadsheetId);
       userSheet = await _createSheet(
         spreadsheet,
-        title: 'Sheet_${now.year}_${now.month}',
+        title: 'Sheet_${now.month}/${now.year}',
       );
     } catch (e) {
       print('Init Error: $e');
