@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
         titleTextStyle: const TextStyle(
           color: Color.fromARGB(255, 255, 255, 255),
           fontSize: 25.0,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.normal,
           fontStyle: FontStyle.italic,
         ),
       ),
@@ -178,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Color.fromARGB(255, 255, 255, 255),
             fontWeight: FontWeight.normal,
             fontStyle: FontStyle.italic,
-            fontSize: 9,
+            fontSize: 10,
           ),
           textAlign: TextAlign.center,
         ),
