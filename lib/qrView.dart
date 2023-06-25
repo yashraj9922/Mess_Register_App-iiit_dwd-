@@ -5,7 +5,8 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 class QRViewExample extends StatefulWidget {
   final Function(String) onScannedQRCode;
 
-  const QRViewExample({Key? key, required this.onScannedQRCode}) : super(key: key);
+  const QRViewExample({Key? key, required this.onScannedQRCode})
+      : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -41,7 +42,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     );
   }
 
-    void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       final scannedDataParts = scanData.code!.split(',');
