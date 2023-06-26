@@ -81,58 +81,85 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addEntry() async {
-    if (_scannedRollNumber.isNotEmpty && _quantityController.text.isNotEmpty) {
-      final rollNumber = _scannedRollNumber;
-      final quantity = int.parse(_quantityController.text);
-      final type = _selectedEntryType;
+  if (_scannedRollNumber.isNotEmpty && _quantityController.text.isNotEmpty) {
+    final rollNumber = _scannedRollNumber;
+    final quantity = int.parse(_quantityController.text);
 
-      final rows = await userSheet.values.allRows();
-      int rowIndex = -1;
-      for (int i = 0; i < rows.length; i++) {
-        if (rows[i][0] == rollNumber && rows[i][1] == type) {
-          rowIndex = i;
-          break;
-        }
+    final rows = await userSheet.values.allRows();
+    int rowIndex = -1;
+    for (int i = 0; i < rows.length; i++) {
+      if (rows[i][0] == rollNumber) {
+        rowIndex = i;
+        break;
+      }
+    }
+
+    if (rowIndex != -1) {
+      final existingMilk05LQuantity = int.parse(rows[rowIndex][1]);
+      final existingMilk1LQuantity = int.parse(rows[rowIndex][2]);
+      final existingCurd05LQuantity = int.parse(rows[rowIndex][3]);
+
+      int newMilk05LQuantity = existingMilk05LQuantity;
+      int newMilk1LQuantity = existingMilk1LQuantity;
+      int newCurd05LQuantity = existingCurd05LQuantity;
+
+      if (_selectedEntryType == 'Milk(0.5 L)') {
+        newMilk05LQuantity += quantity;
+      } else if (_selectedEntryType == 'Milk(1 L)') {
+        newMilk1LQuantity += quantity;
+      } else if (_selectedEntryType == 'Curd(0.5 L)') {
+        newCurd05LQuantity += quantity;
       }
 
-      if (rowIndex != -1) {
-        final existingQuantity = int.parse(rows[rowIndex][2]);
-        final newQuantity = existingQuantity + quantity;
-        rows[rowIndex][2] = newQuantity.toString();
-        // rows[rowIndex][3] = now.toString();
-        await userSheet.values.insertRow(rowIndex + 1, rows[rowIndex]);
-      } else {
+      rows[rowIndex][1] = newMilk05LQuantity.toString();
+      rows[rowIndex][2] = newMilk1LQuantity.toString();
+      rows[rowIndex][3] = newCurd05LQuantity.toString();
+
+      await userSheet.values.insertRow(rowIndex + 1, rows[rowIndex]);
+    } else {
+      // Check if the worksheet is empty
+      if (rows.isEmpty) {
         await userSheet.values.appendRow([
-          rollNumber,
-          type,
-          quantity.toString(),
-          // now.toString(),
+          'Roll No.',
+          'Milk(0.5 L)',
+          'Milk(1 L)',
+          'Curd(0.5 L)',
         ]);
       }
-
-      _quantityController.clear();
-      _scannedRollNumber = '';
-
-// Reset the counter value and quantity controller
-      setState(() {
-        _counter = 0;
-        _quantityController.text = _counter.toString();
-        _selectedEntryType = ''; // Set the default toggle button
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Entry added successfully.'),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please scan a QR code and enter the quantity.'),
-        ),
-      );
+      
+      await userSheet.values.appendRow([
+        rollNumber,
+        _selectedEntryType == 'Milk(0.5 L)' ? quantity.toString() : '0',
+        _selectedEntryType == 'Milk(1 L)' ? quantity.toString() : '0',
+        _selectedEntryType == 'Curd(0.5 L)' ? quantity.toString() : '0',
+      ]);
     }
+
+    _quantityController.clear();
+    _scannedRollNumber = '';
+
+    // Reset the counter value and quantity controller
+    setState(() {
+      _counter = 0;
+      _quantityController.text = _counter.toString();
+      _selectedEntryType = ''; // Set the default toggle button
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Entry added successfully.'),
+      ),
+    );
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Please scan a QR code and enter the quantity.'),
+      ),
+    );
   }
+}
+
+
 
   Future<void> _scanQRCode() async {
     final code = await Navigator.push<String>(
