@@ -1,3 +1,25 @@
+r'''
+{
+  "type": "service_account",
+  "project_id": "gsheets-387620",
+  "private_key_id": "123b49dc1dac90de884d78891a82ec1e4639c8f6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCZpsyQVWNtWJ5q\nvroQ4yclHVa7H5NebaFGCzkVDPl4iMDHFUfqAeBPTfYcsct3B7vmL1FzwgWdFGRl\n4mcd69yWwA+WR7OgFXK1vsoQr2MQjG6utz5XLopyXAc5gg3MduRD0sOanftTu1oh\ndJArhdoSLN62QGxDib5ABxNcp96tiWvSh9hTreY7iws1S+oA4ti43NbnwKD5eLM8\nC4vjJqS0m5vPg8Y4uhjX8Km/3CcJnc9aHWIybDlfO0AuzAloKMoID2lnUQrn1a+U\n6dNCl+fsGSkz1eAD6Vk+lAU0D93GjeK9lHYOGjCtiBecZgtjlcFqAglVNRN8mB5t\n5zGKOVbrAgMBAAECggEAAm9mUT3z3skcxExUM+2lsoI4hwFacJCu5vvz4lAw/qa2\n3MY1kZEzYOO3bCpVMy8S3J8QshOidc7bmHxyGJijB7CbjqIsR/PkZtpTPC3Las5k\nTViSIFztzMowmHS7NeuxynFjWuajaRGlvV9U5EZcImrw91UmDMaja+2wx4h8OvvV\nnu6VobsqyIg0vdBLuw801R3jal9OFGnX6l/QmcLyJXaUwrGP0qkuks5y/Yd2wGQW\nGqJzZs/YQTCjCdSfePlMj7nYoyq9Khc9jCLEFSh15jth/yOcFRay1NYP84g98k8i\nrRcl7VAA1pPu+QgipJYe6OJ637IwCLBcw/sDDc+kwQKBgQDGm8fFL+djvT9PKcpt\n+RcpJvLF5Q4RjjQAgiRavASO5Hj0+s10xY5UN7xFxhToUm6MZ/iTjInXFv2gERPY\nwQnE/r76mmnao+sVa0/2OoqKbKQ6lNFAeXXMnlfk3wLo2C5G0Duw+te/5nxNOPtp\nVt0zYAvjV3OSSpP4mNy0MrTt2QKBgQDGDUrx3uVGGagX5CTCg/Mly70999btJZ5V\nA5T1nJCGwnt9cDzDbapQS37f34phQdKhk7D1HVyIzhm/tp1ACIh1gKtfbxHUC58b\nd2iD/g89nV/X+0t4Qxx7pupuz0CD6YGLHIxHGQcWGQMxVtHm4iPPrkLHI51sHI7M\nXH1rEIa8YwKBgCNYL8oQx14BnNWqu0Ks9Ik3TDcZl1Jaezin8G5RTYJceIYoaA3i\n5nxoWtIT+T6LBO9pxVwEw7cKeWJWB7EoUWPEbhpNBo+JYlmyek14h5Uw1l0yhLaz\nptoeR8gMRAlKB5pEjorlaSXWj8JyZJOPiNgOvK7drkyXhxPTqFtNNtOpAoGATCqI\njARgwFjVoHqI+JWuSPbVzKMn8QPqpF9ARkT0AB+DRnaHp9DhEwg1vvtFSKn7y0/1\nWg70q1g35tbgGuQtNqNJROZ+QMJHalS9ySVHzzZaycFHAPUuWw+SURM7iH+g5lMQ\nT7d8Vi9AXxU4nEaT5ybpX5R+0jkZYdagFTDB4GkCgYEAnuibu7RnTPZ3pqxyQaBz\nVXn+1yNbmPFHkAAPlXqMZGsyXa1jkMUz29+oGpyGo6OQ7kW///yICAjGFsV15Isk\nXl+d1bQNi4q3HZHmSk7B1MT0fpI352ICq6FuWvHWzmb3fkNZl5joJf/2V390qZcU\n3l+rGb+bieN4tHBPQbvhss4=\n-----END PRIVATE KEY-----\n",
+  "client_email": "gsheets@gsheets-387620.iam.gserviceaccount.com",
+  "client_id": "109431254499431226867",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/gsheets%40gsheets-387620.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+'''
+
+
+
+'1w-VzJr0VEuVndCdt1uq2AlPe_txnB1EYCWsjrSECODM'
+
+
+
 import 'package:flutter/material.dart';
 import 'package:gsheets/gsheets.dart';
 import 'package:mess_register/qrView.dart';
@@ -29,13 +51,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _quantityControllermilk = TextEditingController();
-  final _quantityControllercurd = TextEditingController();
+  final _quantityController = TextEditingController();
+  String _selectedEntryType = '';
   String _scannedRollNumber = '';
-  int _counterMilk = 0;
-  int _counterCurd = 0;
-
-  final gsheets = GSheets(r'''
+  final gsheets_monthly = GSheets(r'''
 {
   "type": "service_account",
   "project_id": "gsheets-387620",
@@ -50,11 +69,13 @@ class _MyHomePageState extends State<MyHomePage> {
   "universe_domain": "googleapis.com"
 }
 '''); // Replace with your own credentials file
-
-  final spreadsheetId = '1w-VzJr0VEuVndCdt1uq2AlPe_txnB1EYCWsjrSECODM';
+// final gsheets_daily = GSheets(r'''
+// '''); // Replace with your own credentials file
+  // final spreadsheetId_daily = '1w-VzJr0VEuVndCdt1uq2AlPe_txnB1EYCWsjrSECODM';
+  final spreadsheetId_monthly = '1w-VzJr0VEuVndCdt1uq2AlPe_txnB1EYCWsjrSECODM';
   final now = DateTime.now();
-
-  late Worksheet userSheet;
+  // late Worksheet userSheet_daily;
+  late Worksheet userSheet_monthly;
 
   @override
   void initState() {
@@ -64,8 +85,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> init() async {
     try {
-      final spreadsheet = await gsheets.spreadsheet(spreadsheetId);
-      userSheet = await _createSheet(
+      final spreadsheet = await gsheets_monthly.spreadsheet(spreadsheetId_monthly);
+      userSheet_monthly = await _createSheet(
         spreadsheet,
         title: 'Sheet_${now.month}/${now.year}',
       );
@@ -86,18 +107,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addEntry() async {
-    if (_scannedRollNumber.isNotEmpty &&
-            _quantityControllermilk.text.isNotEmpty ||
-        _quantityControllercurd.text.isNotEmpty) {
+    if (_scannedRollNumber.isNotEmpty && _quantityController.text.isNotEmpty) {
       final rollNumber = _scannedRollNumber;
-      final quantitymilk = _quantityControllermilk.text.isNotEmpty
-          ? double.parse(_quantityControllermilk.text)
-          : 0.0;
-      final quantitycurd = _quantityControllercurd.text.isNotEmpty
-          ? double.parse(_quantityControllercurd.text)
-          : 0.0;
+      final quantity = int.parse(_quantityController.text);
 
-      final rows = await userSheet.values.allRows();
+      final rows = await userSheet_monthly.values.allRows();
       int rowIndex = -1;
       for (int i = 0; i < rows.length; i++) {
         if (rows[i][0] == rollNumber) {
@@ -107,58 +121,55 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
       if (rowIndex != -1) {
-        final existingMilkLQuantity = double.parse(rows[rowIndex][1] ??
-            '0'); // Parse existing value or use 0 as default
-        final existingCurdLQuantity = double.parse(rows[rowIndex][2] ??
-            '0'); // Parse existing value or use 0 as default
+        final existingMilk05LQuantity = double.parse(rows[rowIndex][1]);
+        final existingCurd05LQuantity = double.parse(rows[rowIndex][2]);
 
-        double newMilkLQuantity = existingMilkLQuantity;
-        double newCurdLQuantity = existingCurdLQuantity;
+        double newMilk05LQuantity = existingMilk05LQuantity;
+        double newCurd05LQuantity = existingCurd05LQuantity;
 
-        newMilkLQuantity += quantitymilk * 0.5;
-        newCurdLQuantity += quantitycurd * 0.5;
+        if (_selectedEntryType == 'Milk') {
+          newMilk05LQuantity += (quantity * 0.5);
+        } else if (_selectedEntryType == 'Curd') {
+          newCurd05LQuantity += (quantity * 0.5);
+        }
 
-        rows[rowIndex][1] = newMilkLQuantity.toString();
-        rows[rowIndex][2] = newCurdLQuantity.toString();
+        rows[rowIndex][1] = newMilk05LQuantity.toString();
+        rows[rowIndex][2] = newCurd05LQuantity.toString();
 
-        await userSheet.values.insertRow(rowIndex + 1, rows[rowIndex]);
+        await userSheet_monthly.values.insertRow(rowIndex + 1, rows[rowIndex]);
       } else {
         // Check if the worksheet is empty
         if (rows.isEmpty) {
-          await userSheet.values.appendRow([
+          await userSheet_monthly.values.appendRow([
             'Roll No.',
             'Milk',
             'Curd',
           ]);
         }
-
-        await userSheet.values.appendRow([
+      
+        await userSheet_monthly.values.appendRow([
           rollNumber,
-          (quantitymilk * 0.5).toString(),
-          (quantitycurd * 0.5).toString(),
+          _selectedEntryType == 'Milk' ? quantity.toString() : '0',
+          _selectedEntryType == 'Curd' ? quantity.toString() : '0',
         ]);
       }
 
-      _quantityControllermilk.clear();
-      _quantityControllercurd.clear();
+      _quantityController.clear();
       _scannedRollNumber = '';
-      _counterMilk = 0;
-      _counterCurd = 0;
+
+      // Reset the counter value and quantity controller
+      setState(() {
+        _counterMilk = 0;
+        _counterCurd = 0;
+        _quantityController.text = '0';
+        _selectedEntryType = ''; // Set the default toggle button
+      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Entry added successfully.'),
         ),
       );
-
-      setState(() {
-        // Resetting the parameters
-        _quantityControllermilk.clear();
-        _quantityControllercurd.clear();
-        _scannedRollNumber = '';
-        _counterMilk = 0;
-        _counterCurd = 0;
-      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -172,14 +183,13 @@ class _MyHomePageState extends State<MyHomePage> {
     final code = await Navigator.push<String>(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => QRViewExample(
-          onScannedQRCode: (code) {
-            setState(() {
-              _scannedRollNumber = code;
-            });
-            Navigator.pop(context);
-          },
-        ),
+        builder: (BuildContext context) =>
+            QRViewExample(onScannedQRCode: (code) {
+          setState(() {
+            _scannedRollNumber = code;
+          });
+          Navigator.pop(context);
+        }),
       ),
     );
 
@@ -189,6 +199,9 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
   }
+
+  int _counterMilk = 0;
+  int _counterCurd = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Expanded(
                       child: Column(
                         children: [
-                          const Text(
+                          Text(
                             'Milk',
                             style: TextStyle(
                               fontSize: 16.0,
@@ -262,14 +275,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                   setState(() {
                                     if (_counterMilk > 0) {
                                       _counterMilk--;
-                                      _quantityControllermilk.text = _counterMilk
-                                          .toString(); // Update quantity controller value
+                                      _quantityController.text =
+                                          '$_counterMilk'; // Update quantity controller value
                                     }
                                   });
                                 },
+                                child: Icon(Icons.remove, color: Colors.black),
                                 backgroundColor: Colors.white,
-                                child: const Icon(Icons.remove,
-                                    color: Colors.black),
                               ),
                               Text('$_counterMilk',
                                   style: const TextStyle(fontSize: 60.0)),
@@ -277,13 +289,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 onPressed: () {
                                   setState(() {
                                     _counterMilk++;
-                                    _quantityControllermilk.text = _counterMilk
-                                        .toString(); // Update quantity controller value
+                                    _quantityController.text =
+                                        '$_counterMilk'; // Update quantity controller value
                                   });
                                 },
+                                child: Icon(Icons.add, color: Colors.black),
                                 backgroundColor: Colors.white,
-                                child:
-                                    const Icon(Icons.add, color: Colors.black),
                               ),
                             ],
                           ),
@@ -293,7 +304,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Expanded(
                       child: Column(
                         children: [
-                          const Text(
+                          Text(
                             'Curd',
                             style: TextStyle(
                               fontSize: 16.0,
@@ -309,14 +320,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                   setState(() {
                                     if (_counterCurd > 0) {
                                       _counterCurd--;
-                                      _quantityControllercurd.text = _counterCurd
-                                          .toString(); // Update quantity controller value
+                                      _quantityController.text =
+                                          _counterCurd.toString(); // Update quantity controller value
                                     }
                                   });
                                 },
+                                child: Icon(Icons.remove, color: Colors.black),
                                 backgroundColor: Colors.white,
-                                child: const Icon(Icons.remove,
-                                    color: Colors.black),
                               ),
                               Text('$_counterCurd',
                                   style: const TextStyle(fontSize: 60.0)),
@@ -324,13 +334,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 onPressed: () {
                                   setState(() {
                                     _counterCurd++;
-                                    _quantityControllercurd.text = _counterCurd
-                                        .toString(); // Update quantity controller value
+                                    _quantityController.text =
+                                        _counterCurd.toString(); // Update quantity controller value
                                   });
                                 },
+                                child: Icon(Icons.add, color: Colors.black),
                                 backgroundColor: Colors.white,
-                                child:
-                                    const Icon(Icons.add, color: Colors.black),
                               ),
                             ],
                           ),
@@ -362,3 +371,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
