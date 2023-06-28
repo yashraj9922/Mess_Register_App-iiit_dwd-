@@ -35,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counterMilk = 0;
   int _counterCurd = 0;
 
-  final gsheets = GSheets(r'''
+  final gsheets_monthly = GSheets(r'''
 {
   "type": "service_account",
   "project_id": "gsheets-387620",
@@ -50,11 +50,29 @@ class _MyHomePageState extends State<MyHomePage> {
   "universe_domain": "googleapis.com"
 }
 '''); // Replace with your own credentials file
+  final gsheets_daily = GSheets(r'''
+{
+  "type": "service_account",
+  "project_id": "dailyentry",
+  "private_key_id": "384344227b03bff77e74e3397e56a5afda7d12ec",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDylshFxH9Cn8ye\nFlAxgT9uZYLaznThmTj8IoS9RkqH9g3+rS+DpW3tr+sDmMchlqIpoehjmJAch2V9\n3puLCmJ+W3TTk2Ss+hwiEQ6dvMVLtkdiXj7k5HekZQaYdPFmof0i0TiaYcJTldaz\nJMXw5nt5xdLVTAHe/PL96/Dgkce63gc88JeGlAFVD2LFMJ/2hYM/OynvFodWk9qb\nRKiexZQqprpv6MaZqUYUX7IGog36hDiIQipaGjZrxD08NQ1c0/v0OOHFt8iys7tT\ng8dmrCDzWOIcou4//afEYiUvoAEUIVa/o9CoFcx9tod7Xx045uJllIFQQbjQJQDz\nSVw94RslAgMBAAECggEAEoxWrpubhbRSsJaxAIFVoIMDSj1wFeIW3OkQav7BdZup\nuRqJpWruw2DzRZs27zma12Hmsxtyj1/chyR6vPA+aii41MbdCIB3dLUG//wI6M+n\nLcgEzpBXw9p+nTBkgcNVJ8ZFVJaGGskm4/El76lWcQ/gCDOEzsWFQxwjwYPxTcyv\nNc0YiB7v3yAoV8f4mtcryIxbMA1H+WQeO/Ri6e7y8hzXB+Zzr4wFn9/vPfkd0qhy\nbijVI1Eg3H0Ee7WNh3jd19zji5EdsahWdMBOu7+uCBTF2Bbg4gURFGdIbegykiJ+\nuHgNQeIJRK7md093lMq3a1YG4Spc+fMDYfCaHxAhMQKBgQD9s98MLTMOYwxQ2Og0\nG1ZjwXO98qkrr5y2UxvNfASoy44gzQ+g4r3iYm3ISCS5WT8WzfrWQO+SYLTYkyTD\nZmMpTAakHYOjyvz8mHcz4l6rIqnjTo4xQsaKxSilz28SmE1xnTcHQS//pb5RBGbu\n6kPo+vR5ffg3a+3JJtnZ4PLhdQKBgQD0ySXK26j+HQ6JZpXcNq2MP1iU9ZzbLnXF\nVaLzjFfpzB8NHinzvL//gM2qAehzxGJCq4WchozlZXrpClEyiHciGtkibvSBIaEn\nhF3jeLxIRO2mj50vJJk6UsHJ8CtA3SgISQENB4R9fw3lfL3aF3aA9tpYdGmXGumt\ntGHZNHfs8QKBgHUp7mY3MY8BWxyzL3lw7pKfMo6UVGAid+MTupFJJvW1G+w2B3Or\ngznbbwvBlYQrnSEw+xibYIhfNOWX/rBmxoC55Y9BOhwYkIEvAE3rywCJv5+EFdLW\nHc7UgpMgmxEhWRKRImqtRjdwGdZcjBTmB3q++sxoyor9wxDUamNeqYxJAoGBAMre\n5jZwxGcOV9ziK3Nd0Yl5eoXB5WT15V9NsQZeGwJGTLnHdQdvOESeUFUEzc0cRj9w\n/gQSszTvXOVEyrSxyuJ2E9zozjUzVOd2WYXLq2fN0JQJVEEc+O0QZ1Fgfch9Qc9U\nCc3tnA2SPkcikgntBiat75n9qQE1qdNvuuSUCoxRAoGBAO3yMe1X56Hdx0gOzvBU\n66/Dq5BJGIoBxBhpMf7O3/xjl/eBtTaSsmhAvcsUGB68Tv2ahuc3/6hkUM0mD6DW\nCR3qtUIXYkbEBJy1yqScIfha/P5Gk/hVO56UE0SU3i0/Fllr+ZndOS8YmA3i4nef\nhBtwchnCXjv6v4y4oGf5paZC\n-----END PRIVATE KEY-----\n",
+  "client_email": "dailyentry@dailyentry.iam.gserviceaccount.com",
+  "client_id": "104817807774070690131",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dailyentry%40dailyentry.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
 
-  final spreadsheetId = '1w-VzJr0VEuVndCdt1uq2AlPe_txnB1EYCWsjrSECODM';
+'''); // Replace with your own credentials file
+
+  final spreadsheetId_monthly = '1w-VzJr0VEuVndCdt1uq2AlPe_txnB1EYCWsjrSECODM';
+  final spreadsheetId_daily = '1_b9K1IIA_36MB_Bl0kpbAtADs0R8jWd4KXnLAtOxiD0';
   final now = DateTime.now();
 
-  late Worksheet userSheet;
+  late Worksheet userSheet_monthly;
+  late Worksheet userSheet_daily;
 
   @override
   void initState() {
@@ -64,28 +82,174 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> init() async {
     try {
-      final spreadsheet = await gsheets.spreadsheet(spreadsheetId);
-      userSheet = await _createSheet(
-        spreadsheet,
+      final spreadsheetMonthly =
+          await gsheets_monthly.spreadsheet(spreadsheetId_monthly);
+      userSheet_monthly = await _createSheet_monthly(
+        spreadsheetMonthly,
         title: 'Sheet_${now.month}/${now.year}',
+      );
+      final spreadsheetDaily =
+          await gsheets_daily.spreadsheet(spreadsheetId_daily);
+      userSheet_daily = await _createSheet_daily(
+        spreadsheetDaily,
+        title: 'Sheet_${now.day}/${now.month}/${now.year}',
       );
     } catch (e) {
       print('Init Error: $e');
     }
   }
 
-  static Future<Worksheet> _createSheet(
-    Spreadsheet spreadsheet, {
+  static Future<Worksheet> _createSheet_daily(
+    Spreadsheet spreadsheetDaily, {
     required String title,
   }) async {
     try {
-      return await spreadsheet.addWorksheet(title);
+      return await spreadsheetDaily.addWorksheet(title);
     } catch (e) {
-      return spreadsheet.worksheetByTitle(title)!;
+      return spreadsheetDaily.worksheetByTitle(title)!;
     }
   }
 
-  void _addEntry() async {
+  static Future<Worksheet> _createSheet_monthly(
+    Spreadsheet spreadsheetMonthly, {
+    required String title,
+  }) async {
+    try {
+      return await spreadsheetMonthly.addWorksheet(title);
+    } catch (e) {
+      return spreadsheetMonthly.worksheetByTitle(title)!;
+    }
+  }
+
+//   void _addEntry() async {
+//   if (_scannedRollNumber.isNotEmpty &&
+//       (_quantityControllermilk.text.isNotEmpty ||
+//           _quantityControllercurd.text.isNotEmpty)) {
+//     final rollNumber = _scannedRollNumber;
+//     final quantitymilk = _quantityControllermilk.text.isNotEmpty
+//         ? double.parse(_quantityControllermilk.text)
+//         : 0.0;
+//     final quantitycurd = _quantityControllercurd.text.isNotEmpty
+//         ? double.parse(_quantityControllercurd.text)
+//         : 0.0;
+
+//     final rowsMonthly = await userSheet_monthly.values.allRows();
+//     int rowIndexMonthly = -1;
+//     for (int i = 0; i < rowsMonthly.length; i++) {
+//       if (rowsMonthly[i][0] == rollNumber) {
+//         rowIndexMonthly = i;
+//         break;
+//       }
+//     }
+
+//     final rowsDaily = await userSheet_daily.values.allRows();
+//     int rowIndexDaily = -1;
+//     for (int i = 0; i < rowsDaily.length; i++) {
+//       if (rowsDaily[i][0] == rollNumber) {
+//         rowIndexDaily = i;
+//         break;
+//       }
+//     }
+
+//     if (rowIndexMonthly != -1) {
+//       final existingMilkLQuantity =
+//           double.parse(rowsMonthly[rowIndexMonthly][1] ?? '0');
+//       final existingCurdLQuantity =
+//           double.parse(rowsMonthly[rowIndexMonthly][2] ?? '0');
+
+//       double newMilkLQuantity = existingMilkLQuantity;
+//       double newCurdLQuantity = existingCurdLQuantity;
+
+//       newMilkLQuantity += quantitymilk * 0.5;
+//       newCurdLQuantity += quantitycurd * 0.5;
+
+//       rowsMonthly[rowIndexMonthly][1] = newMilkLQuantity.toString();
+//       rowsMonthly[rowIndexMonthly][2] = newCurdLQuantity.toString();
+
+//       await userSheet_monthly.values.insertRow(
+//           rowIndexMonthly + 1, rowsMonthly[rowIndexMonthly]);
+//     } else {
+//       // Check if the monthly worksheet is empty
+//       if (rowsMonthly.isEmpty) {
+//         await userSheet_monthly.values.appendRow([
+//           'Roll No.',
+//           'Milk',
+//           'Curd',
+//         ]);
+//       }
+
+//       await userSheet_monthly.values.appendRow([
+//         rollNumber,
+//         (quantitymilk * 0.5).toString(),
+//         (quantitycurd * 0.5).toString(),
+//       ]);
+//     }
+
+//     if (rowIndexDaily != -1) {
+//       final existingMilkLQuantity =
+//           double.parse(rowsDaily[rowIndexDaily][1] ?? '0');
+//       final existingCurdLQuantity =
+//           double.parse(rowsDaily[rowIndexDaily][2] ?? '0');
+
+//       double newMilkLQuantity = existingMilkLQuantity;
+//       double newCurdLQuantity = existingCurdLQuantity;
+
+//       newMilkLQuantity += quantitymilk * 0.5;
+//       newCurdLQuantity += quantitycurd * 0.5;
+
+//       rowsDaily[rowIndexDaily][1] = newMilkLQuantity.toString();
+//       rowsDaily[rowIndexDaily][2] = newCurdLQuantity.toString();
+
+//       await userSheet_daily.values.insertRow(
+//           rowIndexDaily + 1, rowsDaily[rowIndexDaily]);
+//     } else {
+//       // Check if the daily worksheet is empty
+//       if (rowsDaily.isEmpty) {
+//         await userSheet_daily.values.appendRow([
+//           'Roll No.',
+//           'Milk',
+//           'Curd',
+//         ]);
+//       }
+
+//       await userSheet_daily.values.appendRow([
+//         rollNumber,
+//         (quantitymilk * 0.5).toString(),
+//         (quantitycurd * 0.5).toString(),
+//       ]);
+//     }
+
+//     _quantityControllermilk.clear();
+//     _quantityControllercurd.clear();
+//     _scannedRollNumber = '';
+//     _counterMilk = 0;
+//     _counterCurd = 0;
+
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       const SnackBar(
+//         content: Text('Entry added successfully.'),
+//       ),
+//     );
+
+//     setState(() {
+//       // Resetting the parameters
+//       _quantityControllermilk.clear();
+//       _quantityControllercurd.clear();
+//       _scannedRollNumber = '';
+//       _counterMilk = 0;
+//       _counterCurd = 0;
+//     });
+//   } else {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       const SnackBar(
+//         content: Text('Please scan a QR code and enter the quantity.'),
+//       ),
+//     );
+//   }
+// }
+
+
+  void _addEntryMonthly() async {
     if (_scannedRollNumber.isNotEmpty &&
             _quantityControllermilk.text.isNotEmpty ||
         _quantityControllercurd.text.isNotEmpty) {
@@ -97,19 +261,19 @@ class _MyHomePageState extends State<MyHomePage> {
           ? double.parse(_quantityControllercurd.text)
           : 0.0;
 
-      final rows = await userSheet.values.allRows();
+      final rowsMonthly = await userSheet_monthly.values.allRows();
       int rowIndex = -1;
-      for (int i = 0; i < rows.length; i++) {
-        if (rows[i][0] == rollNumber) {
+      for (int i = 0; i < rowsMonthly.length; i++) {
+        if (rowsMonthly[i][0] == rollNumber) {
           rowIndex = i;
           break;
         }
       }
 
       if (rowIndex != -1) {
-        final existingMilkLQuantity = double.parse(rows[rowIndex][1] ??
+        final existingMilkLQuantity = double.parse(rowsMonthly[rowIndex][1] ??
             '0'); // Parse existing value or use 0 as default
-        final existingCurdLQuantity = double.parse(rows[rowIndex][2] ??
+        final existingCurdLQuantity = double.parse(rowsMonthly[rowIndex][2] ??
             '0'); // Parse existing value or use 0 as default
 
         double newMilkLQuantity = existingMilkLQuantity;
@@ -118,21 +282,106 @@ class _MyHomePageState extends State<MyHomePage> {
         newMilkLQuantity += quantitymilk * 0.5;
         newCurdLQuantity += quantitycurd * 0.5;
 
-        rows[rowIndex][1] = newMilkLQuantity.toString();
-        rows[rowIndex][2] = newCurdLQuantity.toString();
+        rowsMonthly[rowIndex][1] = newMilkLQuantity.toString();
+        rowsMonthly[rowIndex][2] = newCurdLQuantity.toString();
 
-        await userSheet.values.insertRow(rowIndex + 1, rows[rowIndex]);
+        await userSheet_monthly.values
+            .insertRow(rowIndex + 1, rowsMonthly[rowIndex]);
       } else {
         // Check if the worksheet is empty
-        if (rows.isEmpty) {
-          await userSheet.values.appendRow([
+        if (rowsMonthly.isEmpty) {
+          await userSheet_monthly.values.appendRow([
             'Roll No.',
             'Milk',
             'Curd',
           ]);
         }
 
-        await userSheet.values.appendRow([
+        await userSheet_monthly.values.appendRow([
+          rollNumber,
+          (quantitymilk * 0.5).toString(),
+          (quantitycurd * 0.5).toString(),
+        ]);
+      }
+
+      _quantityControllermilk.clear();
+      _quantityControllercurd.clear();
+      _scannedRollNumber = '';
+      _counterMilk = 0;
+      _counterCurd = 0;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Entry added successfully.'),
+        ),
+      );
+
+      setState(() {
+        // Resetting the parameters
+        _quantityControllermilk.clear();
+        _quantityControllercurd.clear();
+        _scannedRollNumber = '';
+        _counterMilk = 0;
+        _counterCurd = 0;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please scan a QR code and enter the quantity.'),
+        ),
+      );
+    }
+  }
+
+  void _addEntryDaily() async {
+    if (_scannedRollNumber.isNotEmpty &&
+            _quantityControllermilk.text.isNotEmpty ||
+        _quantityControllercurd.text.isNotEmpty) {
+      final rollNumber = _scannedRollNumber;
+      final quantitymilk = _quantityControllermilk.text.isNotEmpty
+          ? double.parse(_quantityControllermilk.text)
+          : 0.0;
+      final quantitycurd = _quantityControllercurd.text.isNotEmpty
+          ? double.parse(_quantityControllercurd.text)
+          : 0.0;
+
+      final rowsDaily = await userSheet_daily.values.allRows();
+      int rowIndex = -1;
+      for (int i = 0; i < rowsDaily.length; i++) {
+        if (rowsDaily[i][0] == rollNumber) {
+          rowIndex = i;
+          break;
+        }
+      }
+
+      if (rowIndex != -1) {
+        final existingMilkLQuantity = double.parse(rowsDaily[rowIndex][1] ??
+            '0'); // Parse existing value or use 0 as default
+        final existingCurdLQuantity = double.parse(rowsDaily[rowIndex][2] ??
+            '0'); // Parse existing value or use 0 as default
+
+        double newMilkLQuantity = existingMilkLQuantity;
+        double newCurdLQuantity = existingCurdLQuantity;
+
+        newMilkLQuantity += quantitymilk * 0.5;
+        newCurdLQuantity += quantitycurd * 0.5;
+
+        rowsDaily[rowIndex][1] = newMilkLQuantity.toString();
+        rowsDaily[rowIndex][2] = newCurdLQuantity.toString();
+
+        await userSheet_daily.values
+            .insertRow(rowIndex + 1, rowsDaily[rowIndex]);
+      } else {
+        // Check if the worksheet is empty
+        if (rowsDaily.isEmpty) {
+          await userSheet_daily.values.appendRow([
+            'Roll No.',
+            'Milk',
+            'Curd',
+          ]);
+        }
+
+        await userSheet_daily.values.appendRow([
           rollNumber,
           (quantitymilk * 0.5).toString(),
           (quantitycurd * 0.5).toString(),
@@ -217,27 +466,43 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 40.0),
+            Image.asset(
+              'assets/iiit_dharwad_logo.png',
+              height: 200,
+              width: 200,
+            ),
+            const SizedBox(height: 50.0),
             ElevatedButton(
               onPressed: _scanQRCode,
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.lightBlue),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Color.fromARGB(255, 4, 172, 113)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        20.0), // Adjust the value as needed
+                  ),
+                ),
               ),
               child: const Text('Scan QR Code'),
             ),
-            const SizedBox(height: 16.0),
-            Text(
-              'Roll Number: $_scannedRollNumber',
-              style: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
+
+            const SizedBox(height: 20.0),
+            Center(
+              child: Text(
+                '$_scannedRollNumber',
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            const SizedBox(height: 46.0),
+            const SizedBox(height: 25.0),
             Column(
               children: [
                 Row(
@@ -249,11 +514,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           const Text(
                             'Milk',
                             style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 26.0,
+                              // fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 11, 38, 54),
                             ),
                           ),
-                          const SizedBox(height: 16.0),
+                          const SizedBox(height: 12.0),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
@@ -296,11 +563,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           const Text(
                             'Curd',
                             style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 26.0,
+                              // fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 11, 38, 54),
                             ),
                           ),
-                          const SizedBox(height: 16.0),
+                          const SizedBox(height: 12.0),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
@@ -341,20 +610,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            const SizedBox(height: 35.0), // Add space here
+            const SizedBox(height: 55.0), // Add space here
             ElevatedButton(
-              onPressed: _addEntry,
+              onPressed: _addEntryDaily,
               style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.lightBlue),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Color.fromARGB(198, 148, 15, 15)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        20.0), // Adjust the value as needed
+                  ),
+                ),
               ),
               child: const Text('Add Entry'),
-            ),
-            const SizedBox(height: 50.0),
-            Image.asset(
-              'assets/iiit_dharwad_logo.png',
-              height: 100,
-              width: 100,
             ),
           ],
         ),
