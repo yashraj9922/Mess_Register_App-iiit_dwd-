@@ -85,88 +85,85 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _addEntry() async {
-    if (_scannedRollNumber.isNotEmpty &&
-            _quantityControllermilk.text.isNotEmpty ||
-        _quantityControllercurd.text.isNotEmpty) {
-      final rollNumber = _scannedRollNumber;
-      final quantitymilk = _quantityControllermilk.text.isNotEmpty
-          ? double.parse(_quantityControllermilk.text)
-          : 0.0;
-      final quantitycurd = _quantityControllercurd.text.isNotEmpty
-          ? double.parse(_quantityControllercurd.text)
-          : 0.0;
+void _addEntry() async {
+  if (_scannedRollNumber.isNotEmpty &&
+      (_quantityControllermilk.text.isNotEmpty ||
+          _quantityControllercurd.text.isNotEmpty)) {
+    final rollNumber = _scannedRollNumber;
+    final quantitymilk = _quantityControllermilk.text.isNotEmpty
+        ? double.parse(_quantityControllermilk.text)
+        : 0.0;
+    final quantitycurd = _quantityControllercurd.text.isNotEmpty
+        ? double.parse(_quantityControllercurd.text)
+        : 0.0;
 
-      final rows = await userSheet.values.allRows();
-      int rowIndex = -1;
-      for (int i = 0; i < rows.length; i++) {
-        if (rows[i][0] == rollNumber) {
-          rowIndex = i;
-          break;
-        }
+    final rows = await userSheet.values.allRows();
+    int rowIndex = -1;
+    for (int i = 0; i < rows.length; i++) {
+      if (rows[i][0] == rollNumber) {
+        rowIndex = i;
+        break;
+      }
+    }
+
+    if (rowIndex != -1) {
+      final existingMilkLQuantity =
+          double.parse(rows[rowIndex][1] ?? '0'); // Parse existing value or use 0 as default
+      final existingCurdLQuantity =
+          double.parse(rows[rowIndex][2] ?? '0'); // Parse existing value or use 0 as default
+
+      double newMilkLQuantity = existingMilkLQuantity;
+      double newCurdLQuantity = existingCurdLQuantity;
+
+      newMilkLQuantity += quantitymilk * 0.5;
+      newCurdLQuantity += quantitycurd * 0.5;
+
+      rows[rowIndex][1] = newMilkLQuantity.toString();
+      rows[rowIndex][2] = newCurdLQuantity.toString();
+
+      await userSheet.values.insertRow(rowIndex + 1, rows[rowIndex]);
+    } else {
+      // Check if the worksheet is empty
+      if (rows.isEmpty) {
+        await userSheet.values.appendRow([
+          'Roll No.',
+          'Milk',
+          'Curd',
+        ]);
       }
 
-      if (rowIndex != -1) {
-        final existingMilkLQuantity = double.parse(rows[rowIndex][1] ??
-            '0'); // Parse existing value or use 0 as default
-        final existingCurdLQuantity = double.parse(rows[rowIndex][2] ??
-            '0'); // Parse existing value or use 0 as default
-
-        double newMilkLQuantity = existingMilkLQuantity;
-        double newCurdLQuantity = existingCurdLQuantity;
-
-        newMilkLQuantity += quantitymilk * 0.5;
-        newCurdLQuantity += quantitycurd * 0.5;
-
-        rows[rowIndex][1] = newMilkLQuantity.toString();
-        rows[rowIndex][2] = newCurdLQuantity.toString();
-
-        await userSheet.values.insertRow(rowIndex + 1, rows[rowIndex]);
-      } else {
-        // Check if the worksheet is empty
-        if (rows.isEmpty) {
-          await userSheet.values.appendRow([
-            'Roll No.',
-            'Milk',
-            'Curd',
-          ]);
-        }
-
+      if (rollNumber.isNotEmpty) {
         await userSheet.values.appendRow([
           rollNumber,
           (quantitymilk * 0.5).toString(),
           (quantitycurd * 0.5).toString(),
         ]);
       }
+    }
 
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Entry added successfully.'),
+      ),
+    );
+
+    setState(() {
+      // Resetting the parameters
       _quantityControllermilk.clear();
       _quantityControllercurd.clear();
       _scannedRollNumber = '';
       _counterMilk = 0;
       _counterCurd = 0;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Entry added successfully.'),
-        ),
-      );
-
-      setState(() {
-        // Resetting the parameters
-        _quantityControllermilk.clear();
-        _quantityControllercurd.clear();
-        _scannedRollNumber = '';
-        _counterMilk = 0;
-        _counterCurd = 0;
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please scan a QR code and enter the quantity.'),
-        ),
-      );
-    }
+    });
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Please scan a QR code and enter the quantity.'),
+      ),
+    );
   }
+}
+
 
   Future<void> _scanQRCode() async {
     final code = await Navigator.push<String>(
