@@ -251,7 +251,7 @@ void _addEntry() async {
                               borderRadius: BorderRadius.circular(
                                   20.0), // Adjust the radius as needed
                               border: Border.all(
-                                color: Color.fromARGB(
+                                color: const Color.fromARGB(
                                     255, 2, 48, 75), // Border color
                                 width: 2.0, // Border width
                               ),
@@ -403,7 +403,7 @@ void _addEntry() async {
                     onPressed: _addEntry,
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color.fromARGB(198, 148, 15, 15)),
+                          const Color.fromARGB(198, 148, 15, 15),),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
